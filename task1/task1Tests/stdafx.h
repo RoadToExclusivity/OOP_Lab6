@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <tchar.h>
 #include <vector>
+#include <iomanip>
 
 #define BOOST_TEST_MODULE Task1Tests
 #define BOOST_TEST_INCLUDED

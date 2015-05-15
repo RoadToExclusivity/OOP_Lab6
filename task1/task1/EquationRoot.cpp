@@ -4,6 +4,7 @@
 using namespace std;
 
 const double EPS = 1e-10;
+const double sqrt4_DBL_MAX = sqrt(sqrt(DBL_MAX));
 
 bool IsZero(double a)
 {
@@ -13,6 +14,11 @@ bool IsZero(double a)
 bool IsEqual(double a, double b)
 {
 	return IsZero(a - b);
+}
+
+bool More(double a, double b)
+{
+	return (!IsEqual(a, b) && a > b);
 }
 
 int Sign(double a)
@@ -73,7 +79,7 @@ double BinSearch(double l, double r, double a, double b, double c, double d, dou
 			return m;
 		}
 
-		if ((newVal > 0 && lVal > rVal) || (newVal < 0 && lVal < rVal))
+		if ((newVal > 0 && More(lVal, rVal)) || (newVal < 0 && More(rVal, lVal)))
 		{
 			l = m;
 		}
@@ -86,22 +92,13 @@ double BinSearch(double l, double r, double a, double b, double c, double d, dou
 	return l;
 }
 
-EquationRoot4 Solve(double a, double b, double c, double d, double e)
+vector<double> CalcSquareRoots(double a, double b, double c)
 {
-	if (a == 0)
-	{
-		throw invalid_argument("a == 0");
-	}
+	vector<double> squareEqRes;
 
 	double discriminant = 36.0 * b * b - 96.0 * a * c;
-	double sqrt4_DBL_MAX = sqrt(sqrt(DBL_MAX));
-	if (discriminant < 0 && !IsZero(discriminant))
-	{
-		throw domain_error("No real roots");
-	}
-
-	vector<double> squareEqRes;
 	squareEqRes.push_back(-sqrt4_DBL_MAX);
+
 	if (IsZero(discriminant))
 	{
 		double x = b / (4.0 * a);
@@ -109,29 +106,61 @@ EquationRoot4 Solve(double a, double b, double c, double d, double e)
 	}
 	else
 	{
-		double sqrtD = sqrt(discriminant);
-		double x1 = (-6.0 * b - sqrtD) / (24 * a), x2 = (-6.0 * b + sqrtD) / (24 * a);
-		squareEqRes.push_back(x1);
-		squareEqRes.push_back(x2);
+		if (discriminant > 0)
+		{
+			double sqrtD = sqrt(discriminant);
+			double x1 = (-6.0 * b - sqrtD) / (24 * a), x2 = (-6.0 * b + sqrtD) / (24 * a);
+			squareEqRes.push_back(x1);
+			squareEqRes.push_back(x2);
+		}
 	}
 	squareEqRes.push_back(sqrt4_DBL_MAX);
 
+	return squareEqRes;
+}
+
+vector<int> CalcSigns(const vector<double> &v, double a, double b, double c, double d, double e, bool isFor4)
+{
+	vector<int> res;
+	for (size_t i = 1; i < v.size() - 1; ++i)
+	{
+		if (isFor4)
+		{
+			res.push_back(Sign(F4(v[i], a, b, c, d, e)));
+		}
+		else
+		{
+			res.push_back(Sign(F3(v[i], a, b, c, d)));
+		}
+	}
+
+	return res;
+}
+
+EquationRoot4 Solve(double a, double b, double c, double d, double e)
+{
+	if (a == 0)
+	{
+		throw invalid_argument("a == 0");
+	}
+
+	vector<double> squareEqRes = CalcSquareRoots(a, b, c);
+
 	double a2 = 4 * a, b2 = 3 * b, c2 = 2 * c;
-	vector<double> res3;
 	
-	vector<int> sign3;
+	vector<int> sign3, sign4;
 	if (a > 0)
 	{
 		sign3.push_back(-1);
+		sign4.push_back(1);
 	}
 	else
 	{
 		sign3.push_back(1);
+		sign4.push_back(-1);
 	}
-	for (size_t i = 1; i < squareEqRes.size() - 1; ++i)
-	{
-		sign3.push_back(Sign(F3(squareEqRes[i], a2, b2, c2, d)));
-	}
+	auto curSigns = CalcSigns(squareEqRes, a2, b2, c2, d, 0, false);
+	sign3.insert(sign3.end(), curSigns.begin(), curSigns.end());
 	if (a > 0)
 	{
 		sign3.push_back(1);
@@ -141,6 +170,7 @@ EquationRoot4 Solve(double a, double b, double c, double d, double e)
 		sign3.push_back(-1);
 	}
 
+	vector<double> res3;
 	res3.push_back(-sqrt4_DBL_MAX);
 	for (size_t i = 1; i < squareEqRes.size(); ++i)
 	{
@@ -152,25 +182,10 @@ EquationRoot4 Solve(double a, double b, double c, double d, double e)
 	}
 	res3.push_back(sqrt4_DBL_MAX);
 
-	if (res3.size() == 2)
-	{
-		throw domain_error("No real roots");
-	}
-
 	vector<double> res;
-	vector<int> sign4;
-	if (a > 0)
-	{
-		sign4.push_back(1);
-	}
-	else
-	{
-		sign4.push_back(-1);
-	}
-	for (size_t i = 1; i < res3.size() - 1; ++i)
-	{
-		sign4.push_back(Sign(F4(res3[i], a, b, c, d, e)));
-	}
+
+	curSigns = CalcSigns(res3, a, b, c, d, e, true);
+	sign4.insert(sign4.end(), curSigns.begin(), curSigns.end());
 	if (a > 0)
 	{
 		sign4.push_back(1);

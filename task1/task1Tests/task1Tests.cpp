@@ -87,8 +87,8 @@ BOOST_AUTO_TEST_CASE(HaveRealRoots)
 		{
 			res = Solve(5, 5, 5, 5, 0);
 			BOOST_CHECK_EQUAL(res.numRoots, 2);
-			BOOST_CHECK_CLOSE(res.roots[0], -1.00000004, EPS);
-			BOOST_CHECK_CLOSE(res.roots[1], 0, EPS);
+			BOOST_CHECK_CLOSE(res.roots[0], -1, EPS);
+			BOOST_CHECK(fabs(res.roots[1] - 0.0) <= EPS);
 			BOOST_CHECK(true);
 		}
 		catch (exception)
