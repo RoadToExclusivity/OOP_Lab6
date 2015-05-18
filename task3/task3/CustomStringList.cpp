@@ -8,22 +8,22 @@ CCustomStringList::CCustomStringList()
 {
 }
 
-std::shared_ptr<const CNode> CCustomStringList::GetFirst() const
+std::shared_ptr<CNode> CCustomStringList::GetFirst() const
 {
 	return m_first;
 }
 
-std::shared_ptr<const CNode> CCustomStringList::GetLast() const
+std::shared_ptr<CNode> CCustomStringList::GetLast() const
 {
 	return m_last;
 }
 
-std::shared_ptr<const CNode> CCustomStringList::GetNext(const std::shared_ptr<const CNode> ptr) const
+std::shared_ptr<CNode> CCustomStringList::GetNext(const std::shared_ptr<const CNode> ptr) const
 {
 	return ptr->GetNext();
 }
 
-std::shared_ptr<const CNode> CCustomStringList::GetPrev(const std::shared_ptr<const CNode> ptr) const
+std::shared_ptr<CNode> CCustomStringList::GetPrev(const std::shared_ptr<const CNode> ptr) const
 {
 	return ptr->GetPrev();
 }
@@ -52,6 +52,7 @@ void CCustomStringList::Insert(const std::string &s)
 		if (curPtr->GetValue() > s)
 		{
 			found = true;
+			break;
 		}
 		else
 		{
@@ -62,6 +63,16 @@ void CCustomStringList::Insert(const std::string &s)
 	if (found)
 	{
 		shared_ptr<CNode> tmp = curPtr->GetPrev();
+		newPtr->SetPrev(tmp);
+		newPtr->SetNext(curPtr);
+		if (tmp)
+		{
+			tmp->SetNext(newPtr);
+		}
+		else
+		{
+			m_first = newPtr;
+		}
 	}
 	else
 	{
@@ -73,5 +84,21 @@ void CCustomStringList::Insert(const std::string &s)
 
 void CCustomStringList::Delete(const std::shared_ptr<CNode> elem)
 {
-
+	if (!elem->GetPrev())
+	{
+		m_first = elem->GetNext();
+	}
+	else
+	{
+		if (!elem->GetNext())
+		{
+			m_last = elem->GetPrev();
+		}
+		else
+		{
+			shared_ptr<CNode> prev = elem->GetPrev();
+			prev->SetNext(elem->GetNext());
+			elem->GetNext()->SetPrev(prev);
+		}
+	}
 }

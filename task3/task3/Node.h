@@ -4,11 +4,11 @@ class CNode
 public:
 	CNode(const std::string &s);
 
-	std::shared_ptr<const CNode> GetPrev() const;
-	std::shared_ptr<const CNode> GetNext() const;
+	const std::shared_ptr<CNode> GetPrev() const;
+	const std::shared_ptr<CNode> GetNext() const;
 	std::string GetValue() const;
-	void SetPrev(std::shared_ptr<CNode> &prev);
-	void SetNext(std::shared_ptr<CNode> &prev);
+	void SetPrev(const std::shared_ptr<CNode> prev);
+	void SetNext(const std::shared_ptr<CNode> next);
 
 private:
 	std::string m_value;
