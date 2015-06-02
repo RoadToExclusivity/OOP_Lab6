@@ -73,7 +73,6 @@ void CCustomStringList::Insert(const std::string &s)
 
 	if (found)
 	{
-		cout << "Prev : " << curPtr->GetPrev() << " Next : " << curPtr->GetNext() << endl;
 		shared_ptr<CNode> tmp = curPtr->GetPrev();
 		newPtr->SetNext(curPtr);
 		if (tmp)
