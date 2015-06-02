@@ -21,12 +21,18 @@ std::string CNode::GetValue() const
 	return m_value;
 }
 
-void CNode::SetPrev(const std::shared_ptr<CNode> prev)
+void CNode::SetPrev(const std::shared_ptr<CNode> &prev)
 {
 	m_prev = prev;
 }
 
-void CNode::SetNext(const std::shared_ptr<CNode> next)
+void CNode::SetNext(const std::shared_ptr<CNode> &next)
 {
 	m_next = next;
+}
+
+void CNode::Free()
+{
+	m_prev = nullptr;
+	m_next = nullptr;
 }

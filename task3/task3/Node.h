@@ -7,8 +7,9 @@ public:
 	const std::shared_ptr<CNode> GetPrev() const;
 	const std::shared_ptr<CNode> GetNext() const;
 	std::string GetValue() const;
-	void SetPrev(const std::shared_ptr<CNode> prev);
-	void SetNext(const std::shared_ptr<CNode> next);
+	void SetPrev(const std::shared_ptr<CNode> &prev);
+	void SetNext(const std::shared_ptr<CNode> &next);
+	void Free();
 
 private:
 	std::string m_value;
