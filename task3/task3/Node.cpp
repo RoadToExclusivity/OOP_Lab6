@@ -2,7 +2,7 @@
 #include "Node.h"
 
 CNode::CNode(const std::string &s)
-	:m_value(s), m_prev(std::shared_ptr<CNode>()), m_next(std::shared_ptr<CNode>())
+	:m_value(s), m_prev(std::shared_ptr<CNode>()), m_next(std::weak_ptr<CNode>())
 {
 }
 
@@ -13,7 +13,7 @@ const std::shared_ptr<CNode> CNode::GetPrev() const
 
 const std::shared_ptr<CNode> CNode::GetNext() const
 {
-	return m_next;
+	return m_next.lock();
 }
 
 std::string CNode::GetValue() const
@@ -29,10 +29,4 @@ void CNode::SetPrev(const std::shared_ptr<CNode> &prev)
 void CNode::SetNext(const std::shared_ptr<CNode> &next)
 {
 	m_next = next;
-}
-
-void CNode::Free()
-{
-	m_prev = nullptr;
-	m_next = nullptr;
 }

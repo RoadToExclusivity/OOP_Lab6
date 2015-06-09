@@ -9,10 +9,10 @@ public:
 	std::string GetValue() const;
 	void SetPrev(const std::shared_ptr<CNode> &prev);
 	void SetNext(const std::shared_ptr<CNode> &next);
-	void Free();
 
 private:
 	std::string m_value;
-	std::shared_ptr<CNode> m_next, m_prev;
+	std::shared_ptr<CNode> m_prev;
+	std::weak_ptr<CNode> m_next;
 };
 

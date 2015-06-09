@@ -38,6 +38,27 @@ BOOST_AUTO_TEST_CASE(BigListCheck)
 		ptr = list.GetNext(ptr);
 	}
 	BOOST_CHECK(ptr == nullptr);
+
+	ptr = list.GetFirst();
+	list.Insert("-1", ptr);
+	ptr = list.GetFirst();
+	for (int i = -1; i < 10; ++i)
+	{
+		BOOST_CHECK_EQUAL(ptr->GetValue(), to_string(i));
+		ptr = list.GetNext(ptr);
+	}
+	BOOST_CHECK(ptr == nullptr);
+
+	ptr = list.GetNext(list.GetFirst()); //2
+	list.Insert("22", ptr);
+	ptr = list.GetFirst();
+	for (int i = -1; i < 11; ++i)
+	{
+		int num = i == 0 ? 22 : i > 0 ? i - 1 : i;
+		BOOST_CHECK_EQUAL(ptr->GetValue(), to_string(num));
+		ptr = list.GetNext(ptr);
+	}
+	BOOST_CHECK(ptr == nullptr);
 }
 
 BOOST_AUTO_TEST_CASE(ListDeleteCheck)

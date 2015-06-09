@@ -5,7 +5,6 @@ class CCustomStringList
 {
 public:
 	CCustomStringList();
-	~CCustomStringList();
 
 	std::shared_ptr<CNode> GetFirst() const;
 	std::shared_ptr<CNode> GetLast() const;
@@ -13,7 +12,7 @@ public:
 	std::shared_ptr<CNode> GetPrev(const std::shared_ptr<const CNode> &ptr) const;
 	std::string GetVal(const std::shared_ptr<const CNode> ptr) const;
 
-	void Insert(const std::string &s);
+	void Insert(const std::string &s, std::shared_ptr<CNode> nextElem = nullptr);
 	void Delete(const std::shared_ptr<CNode> elem);
 private:
 	std::shared_ptr<CNode> m_first, m_last;
